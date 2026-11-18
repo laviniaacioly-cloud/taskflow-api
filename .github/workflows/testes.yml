@@ -1,0 +1,37 @@
+# Executa os testes da API a cada push e pull request na main
+
+name: Testes da API
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  testes-api:
+    runs-on: ubuntu-latest
+
+    env:
+      AMBIENTE: ${{ secrets.AMBIENTE }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      # Baixa o código do repositório
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      # Instala o Node.js
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Instala as dependências
+      - name: Instalar dependências
+        run: npm ci
+
+      # Executa os testes
+      - name: Executar testes
+        run: npm test
